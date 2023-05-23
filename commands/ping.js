@@ -1,10 +1,10 @@
-const { SlashCommandBuilder } = require('discord.js')
+import { SlashCommandBuilder } from 'discord.js'
 
-module.exports = {
-  data: new SlashCommandBuilder()
+export const command = {
+  definition: new SlashCommandBuilder()
     .setName('ping')
     .setDescription('Replies with pong!'),
-  async execute(interaction) {
+  execute: async (interaction) => {
     await interaction.reply({ content: `Pong ${interaction.user.tag}!`, ephemeral: true })
   },
 }
