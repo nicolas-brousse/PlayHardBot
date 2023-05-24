@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { Client, Collection, GatewayIntentBits, REST, Routes } from 'discord.js'
+import { logger } from './lib/logger.js'
 
 const token = process.env.DISCORD_TOKEN
 const clientId = process.env.DISCORD_CLIENT_ID
@@ -22,9 +23,9 @@ async function run() {
 
     if ('definition' in command && 'execute' in command) {
       client.commands.set(command.definition.name, command)
-      console.info(`[INFO] The command '${command.definition.name}' at ${filePath} has been successfully loaded.`)
+      logger.info(`The command '${command.definition.name}' at ${filePath} has been successfully loaded.`)
     } else {
-      console.warn(`[WARNING] The command at ${filePath} is missing a required "definition" or "execute" property.`)
+      logger.warn(`The command at ${filePath} is missing a required "definition" or "execute" property.`)
     }
   }
 
@@ -35,9 +36,9 @@ async function run() {
     const data = await rest.put(Routes.applicationGuildCommands(clientId, guildId), {
       body: client.commands.map(command => command.definition.toJSON())
     })
-    console.info(`Successfully reloaded ${data.length} application (/) commands.`)
+    logger.info(`Successfully reloaded ${data.length} application (/) commands.`)
   } catch (error) {
-    console.error(error)
+    logger.error(error)
   }
 
   // Events

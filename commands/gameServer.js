@@ -1,5 +1,6 @@
-import { EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits } from 'discord.js'
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js'
 import PterodactylClient from '../lib/pterodactylClient.js'
+import { logger } from '../lib/logger.js'
 
 const pterodactylClient = new PterodactylClient(
   process.env.PTERODACTYL_API_BASE_URL,
@@ -51,8 +52,6 @@ const definition = new SlashCommandBuilder()
       )
   )
 
-  // PermissionFlagsBits.
-
 async function getServerByName(serverName) {
   const servers = await pterodactylClient.getServerList()
 
@@ -68,7 +67,7 @@ export const command = {
     if (interaction.options.getSubcommand() === 'list') {
       await interaction.deferReply({ ephemeral: true })
 
-      console.info(`${interaction.user.tag} ask servers list`)
+      logger.info(`${interaction.user.tag} ask servers list`)
 
       const servers = await pterodactylClient.getServerList()
       // const embed = new EmbedBuilder().setDescription(`**Available servers are**: ${servers.map(server => `\`${server.name}\``).join(', ')}`)
@@ -84,7 +83,7 @@ export const command = {
       const serverName = interaction.options.getString('servername')
       const server = await getServerByName(serverName)
 
-      console.info(`${interaction.user.tag} ask status for server with name ${serverName}`)
+      logger.info(`${interaction.user.tag} ask status for server with name ${serverName}`)
 
       if (!server) {
         await interaction.editReply({
@@ -107,7 +106,7 @@ export const command = {
       const signal = interaction.options.getString('signal')
       const server = await getServerByName(interaction.options.getString('servername'))
 
-      console.info(`${interaction.user.tag} ask to ${signal} server with name ${serverName}`)
+      logger.info(`${interaction.user.tag} ask to ${signal} server with name ${serverName}`)
 
       if (!server) {
         await interaction.editReply({

@@ -1,4 +1,5 @@
 import { Events } from 'discord.js'
+import { logger } from '../lib/logger.js'
 
 export const event = {
   name: Events.InteractionCreate,
@@ -8,15 +9,15 @@ export const event = {
     const command = interaction.client.commands.get(interaction.commandName)
 
     if (!command) {
-      console.warn(`No command matching ${interaction.commandName} was found.`)
+      logger.warn(`No command matching ${interaction.commandName} was found.`)
       return
     }
 
     try {
       await command.execute(interaction)
     } catch (error) {
-      console.error(`Error executing ${interaction.commandName}`)
-      console.error(error)
+      logger.error(`Error executing ${interaction.commandName}`)
+      logger.error(error)
     }
   },
 }
