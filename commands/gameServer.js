@@ -28,6 +28,7 @@ const definition = new SlashCommandBuilder()
           .setName('servername')
           .setDescription('The server name')
           .setRequired(true)
+          .setAutocomplete(true)
       )
   )
   .addSubcommand(subcommand => 
@@ -39,6 +40,7 @@ const definition = new SlashCommandBuilder()
           .setName('servername')
           .setDescription('The server name')
           .setRequired(true)
+          .setAutocomplete(true)
       )
       .addStringOption(option =>
         option
@@ -60,6 +62,16 @@ async function getServerByName(serverName) {
 
 export const command = {
   definition,
+  autocomplete: async (interaction) => {
+    const focusedValue = interaction.options.getFocused()
+    const servers = await pterodactylClient.getServerList()
+    const choices = servers.map(server => server.name)
+    const filtered = choices.filter(choice => choice.startsWith(focusedValue))
+    
+    await interaction.respond(
+      filtered.map(choice => ({ name: choice, value: choice })),
+    )
+  },
   execute: async (interaction) => {
     // interaction.user is the object representing the User who ran the command
     // interaction.member is the GuildMember object, which represents the user in the specific guild
