@@ -76,19 +76,33 @@ export const command = {
     // interaction.user is the object representing the User who ran the command
     // interaction.member is the GuildMember object, which represents the user in the specific guild
 
+    //
+    // List
+    //
     if (interaction.options.getSubcommand() === 'list') {
       await interaction.deferReply({ ephemeral: true })
 
       logger.info(`${interaction.user.tag} ask servers list`)
 
       const servers = await pterodactylClient.getServerList()
-      // const embed = new EmbedBuilder().setDescription(`**Available servers are**: ${servers.map(server => `\`${server.name}\``).join(', ')}`)
+      const serversInfos = servers.map(server => {
+        if (server.allocations) {
+          return `- **${server.name}**: \`${server.allocations?.at(0)?.getHost()}\``
+        }
 
-      // await interaction.reply({ embeds: [embed], ephemeral: true })
-      await interaction.editReply({
-        content: `**Available servers are**: ${servers.map(server => `\`${server.name}\``).join(', ')}`,
-        ephemeral: true,
+        return `- **${server.name}**`
       })
+
+      const embed = new EmbedBuilder().setDescription(
+        `## Available servers are:\n${serversInfos.join('\n')}`
+      )
+
+      await interaction.editReply({ embeds: [embed], ephemeral: true })
+
+
+    //
+    // Status
+    //
     } else if (interaction.options.getSubcommand() === 'status') {
       await interaction.deferReply({ ephemeral: true })
 
@@ -111,6 +125,11 @@ export const command = {
         content: `Server **${server.name}** is **${stats.currentState}**`,
         ephemeral: true,
       })
+
+
+    //
+    // Power
+    //
     } else if (interaction.options.getSubcommand() === 'power') {
       await interaction.deferReply({ ephemeral: true })
 
