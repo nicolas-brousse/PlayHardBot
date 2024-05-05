@@ -5,6 +5,6 @@ export const command = {
     .setName('ping')
     .setDescription('Replies with pong!'),
   execute: async (interaction) => {
-    await interaction.reply({ content: `Pong ${interaction.user.tag}!`, ephemeral: true })
+    await interaction.reply({ content: `Pong ${interaction.user.username}!`, ephemeral: true })
   },
 }
